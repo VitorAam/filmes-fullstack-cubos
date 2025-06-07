@@ -3,11 +3,15 @@ import { useContext } from "react"
 import { ThemeContext } from "../context/ThemeContext"
 import Moon from "./icons/Moon"
 import Sun from "./icons/Sun"
-import { SecondaryButton } from "./SecondaryButton"
-import { PrimaryButton } from "./PrimaryButton"
+import { SecondaryButton } from "./Buttons/SecondaryButton"
+import { PrimaryButton } from "./Buttons/PrimaryButton"
+import { useLocation, useNavigate } from "react-router-dom"
 
 export const Header = () => {
     const { isDark, toggleTheme } = useContext(ThemeContext)
+    const navigate = useNavigate()
+    const location = useLocation();
+    const pathname = location.pathname;
     const isLogged = false
 
     return (
@@ -22,17 +26,19 @@ export const Header = () => {
                 <SecondaryButton onClick={toggleTheme} w={'64px'} h={'44px'}>
                     <Icon h={'24px'} w={'24px'} as={isDark ? Sun : Moon} />
                 </SecondaryButton>
-                {isLogged ?
-                    (
-                        <PrimaryButton h={'44px'}>
-                            <Text>Logout</Text>
-                        </PrimaryButton>
-                    ) : (
-                        <PrimaryButton h={'44px'}>
-                            <Text>Cadastrar</Text>
-                        </PrimaryButton>
-                    )
-                }
+                {isLogged ? (
+                    <PrimaryButton h="44px">
+                        <Text>Logout</Text>
+                    </PrimaryButton>
+                ) : pathname === "/cadastro" ? (
+                    <PrimaryButton h="44px" onClick={() => navigate("/login")}>
+                        <Text>Login</Text>
+                    </PrimaryButton>
+                ) : (
+                    <PrimaryButton h="44px" onClick={() => navigate("/cadastro")}>
+                        <Text>Cadastrar</Text>
+                    </PrimaryButton>
+                )}
             </Flex>
         </Flex>
     )

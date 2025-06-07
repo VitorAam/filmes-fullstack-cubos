@@ -5,16 +5,17 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { loginUser } from '../services/api';
 import {
-  Button,
   Input,
   FormControl,
   FormLabel,
   FormErrorMessage,
-  Heading,
-  useToast
+  useToast,
+  Flex,
+  Text
 } from '@chakra-ui/react';
-import { Layout } from '../components/Layout';
 import { isAxiosError } from 'axios';
+import { FormContainer } from '../components/Form/FormContainer';
+import { PrimaryButton } from '../components/Buttons/PrimaryButton';
 
 const schema = z.object({
   email: z.string().email({ message: 'E-mail inválido' }),
@@ -55,31 +56,42 @@ export default function RegisterPage() {
   };
 
   return (
-    <Layout>
-      <Heading size="lg">Registro</Heading>
-      <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
-        <FormControl isInvalid={!!errors.email}>
-          <FormLabel htmlFor="email">E-mail</FormLabel>
-          <Input id="email" type="email" {...register('email')} />
-          <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-        </FormControl>
+    <FormContainer onSubmit={handleSubmit(onSubmit)} >
+      <FormControl isInvalid={!!errors.email}>
+        <FormLabel htmlFor="email" color={'mauve.12'}>Nome</FormLabel>
+        <Input id="email" type="email" {...register('email')} placeholder='Digite seu nome' />
+        <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
+      </FormControl>
 
-        <FormControl mt={4} isInvalid={!!errors.password}>
-          <FormLabel htmlFor="password">Senha</FormLabel>
-          <Input id="password" type="password" {...register('password')} />
-          <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
-        </FormControl>
+      <FormControl mt={4} isInvalid={!!errors.password}>
+        <FormLabel htmlFor="email" color={'mauve.12'}>E-mail</FormLabel>
+        <Input id="password" type="password" {...register('password')} placeholder='Digite seu e-mail' />
+        <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+      </FormControl>
 
-        <Button
+      <FormControl mt={4} isInvalid={!!errors.password}>
+        <FormLabel htmlFor="email" color={'mauve.12'}>Senha</FormLabel>
+        <Input id="password" type="password" {...register('password')} placeholder='Digite sua senha' />
+        <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+      </FormControl>
+
+      <FormControl mt={4} isInvalid={!!errors.password}>
+        <FormLabel htmlFor="email" color={'mauve.12'}>Confirmação de senha</FormLabel>
+        <Input id="password" type="password" {...register('password')} placeholder='Digite sua senha novamente' />
+        <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+      </FormControl>
+
+      <Flex justifyContent={'flex-end'} alignItems={'center'} >
+        <PrimaryButton
           type="submit"
-          colorScheme="blue"
           width="full"
-          mt={6}
           isLoading={isSubmitting}
+          w={'110px'}
+          h={'44px'}
         >
-          Entrar
-        </Button>
-      </form>
-    </Layout>
+          <Text>Cadastrar</Text>
+        </PrimaryButton>
+      </Flex>
+    </FormContainer>
   );
 }

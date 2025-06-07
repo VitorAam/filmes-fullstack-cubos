@@ -5,18 +5,20 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { loginUser } from '../services/api';
 import {
-  Button,
   Input,
   FormControl,
   FormLabel,
   FormErrorMessage,
-  Heading,
-  useToast
+  useToast,
+  Text,
+  Flex
 } from '@chakra-ui/react';
-import { Layout } from '../components/Layout';
 import { isAxiosError } from 'axios';
 import { useContext } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
+import { FormContainer } from '../components/Form/FormContainer';
+import { PrimaryButton } from '../components/Buttons/PrimaryButton';
+import { CustomLink } from '../components/Buttons/CustomLink';
 
 const schema = z.object({
   email: z.string().email({ message: 'E-mail inválido' }),
@@ -26,6 +28,7 @@ const schema = z.object({
 type LoginFormData = z.infer<typeof schema>;
 
 export default function LoginPage() {
+  const { toggleTheme } = useContext(ThemeContext)
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormData>({
     resolver: zodResolver(schema),
   });
@@ -56,34 +59,34 @@ export default function LoginPage() {
     }
   };
 
-  const { toggleTheme } = useContext(ThemeContext)
-
   return (
-    <Layout>
-      <Heading size="lg">Login</Heading>
-      <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+      <FormContainer onSubmit={handleSubmit(onSubmit)} >
         <FormControl isInvalid={!!errors.email}>
-          <FormLabel htmlFor="email">E-mail</FormLabel>
-          <Input id="email" type="email" {...register('email')} />
+          <FormLabel htmlFor="email" color={'mauve.12'}>Nome/E-mail</FormLabel>
+          <Input id="email" type="email" {...register('email')} placeholder='Digite seu nome/E-mail' />
           <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
         </FormControl>
 
         <FormControl mt={4} isInvalid={!!errors.password}>
-          <FormLabel htmlFor="password">Senha</FormLabel>
-          <Input id="password" type="password" {...register('password')} />
+          <FormLabel htmlFor="email" color={'mauve.12'}>Senha</FormLabel>
+          <Input id="password" type="password" {...register('password')} placeholder='Digite sua senha' />
           <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
         </FormControl>
-        <Button
-          // type="submit"
-          bgColor={'purple.4'}
-          width="full"
-          mt={6}
-          isLoading={isSubmitting}
-          onClick={() => toggleTheme()}
-        >
-          Entrar
-        </Button>
-      </form>
-    </Layout>
+        <Flex justifyContent={'space-between'} alignItems={'center'} >
+          <CustomLink>
+            Esqueci minha senha
+          </CustomLink>
+          <PrimaryButton
+            type="submit"
+            width="full"
+            isLoading={isSubmitting}
+            onClick={() => toggleTheme()}
+            w={'83px'}
+            h={'44px'}
+          >
+            <Text>Entrar</Text>
+          </PrimaryButton>
+        </Flex>
+      </FormContainer>
   );
 }
