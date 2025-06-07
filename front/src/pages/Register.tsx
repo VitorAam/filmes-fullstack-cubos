@@ -5,10 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { loginUser } from '../services/api';
 import {
-  Input,
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
   useToast,
   Flex,
   Text
@@ -16,10 +12,14 @@ import {
 import { isAxiosError } from 'axios';
 import { FormContainer } from '../components/Form/FormContainer';
 import { PrimaryButton } from '../components/Buttons/PrimaryButton';
+import { FormField } from '../components/Form/FormField';
+import { CustomInput } from '../components/CustomInput';
 
 const schema = z.object({
+  name: z.string().min(2, 'Este nome é inválido'),
   email: z.string().email({ message: 'E-mail inválido' }),
   password: z.string().min(6, 'Senha deve ter ao menos 6 caracteres'),
+  confirmPassword: z.string().min(6, 'Senha deve ter ao menos 6 caracteres')
 });
 
 type RegisterFormData = z.infer<typeof schema>;
@@ -57,29 +57,21 @@ export default function RegisterPage() {
 
   return (
     <FormContainer onSubmit={handleSubmit(onSubmit)} >
-      <FormControl isInvalid={!!errors.email}>
-        <FormLabel htmlFor="email" color={'mauve.12'}>Nome</FormLabel>
-        <Input id="email" type="email" {...register('email')} placeholder='Digite seu nome' />
-        <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-      </FormControl>
+      <FormField label={'Nome'} error={!!errors.name} errorMessage={errors.name?.message ?? ''} >
+        <CustomInput id="name" type="text" {...register('name')} placeholder='Digite seu nome' />
+      </FormField>
 
-      <FormControl mt={4} isInvalid={!!errors.password}>
-        <FormLabel htmlFor="email" color={'mauve.12'}>E-mail</FormLabel>
-        <Input id="password" type="password" {...register('password')} placeholder='Digite seu e-mail' />
-        <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
-      </FormControl>
+      <FormField label={'Nome/E-mail'} error={!!errors.email} errorMessage={errors.email?.message ?? ''} >
+        <CustomInput id="email" type="email" {...register('email')} placeholder='Digite e-mail' />
+      </FormField>
 
-      <FormControl mt={4} isInvalid={!!errors.password}>
-        <FormLabel htmlFor="email" color={'mauve.12'}>Senha</FormLabel>
-        <Input id="password" type="password" {...register('password')} placeholder='Digite sua senha' />
-        <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
-      </FormControl>
+      <FormField label={'Senha'} error={!!errors.password} errorMessage={errors.password?.message ?? ''} >
+        <CustomInput id="password" type="password" {...register('password')} placeholder='Digite sua senha' />
+      </FormField>
 
-      <FormControl mt={4} isInvalid={!!errors.password}>
-        <FormLabel htmlFor="email" color={'mauve.12'}>Confirmação de senha</FormLabel>
-        <Input id="password" type="password" {...register('password')} placeholder='Digite sua senha novamente' />
-        <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
-      </FormControl>
+      <FormField label={'Senha'} error={!!errors.confirmPassword} errorMessage={errors.confirmPassword?.message ?? ''} >
+        <CustomInput id="password" type="password" {...register('password')} placeholder='Digite sua senha novamente' />
+      </FormField>
 
       <Flex justifyContent={'flex-end'} alignItems={'center'} >
         <PrimaryButton

@@ -7,6 +7,8 @@ import { SecondaryButton } from "./Buttons/SecondaryButton"
 import { PrimaryButton } from "./Buttons/PrimaryButton"
 import { useLocation, useNavigate } from "react-router-dom"
 
+
+
 export const Header = () => {
     const { isDark, toggleTheme } = useContext(ThemeContext)
     const navigate = useNavigate()
@@ -30,13 +32,9 @@ export const Header = () => {
                     <PrimaryButton h="44px">
                         <Text>Logout</Text>
                     </PrimaryButton>
-                ) : pathname === "/cadastro" ? (
-                    <PrimaryButton h="44px" onClick={() => navigate("/login")}>
-                        <Text>Login</Text>
-                    </PrimaryButton>
                 ) : (
-                    <PrimaryButton h="44px" onClick={() => navigate("/cadastro")}>
-                        <Text>Cadastrar</Text>
+                    <PrimaryButton h="44px" onClick={() => navigate(pathname === '/cadastro' ? "/login" : "/cadastro")}>
+                        <Text>{pathname === '/cadastro' ? 'Login' : 'Cadastro'}</Text>
                     </PrimaryButton>
                 )}
             </Flex>
