@@ -3,12 +3,13 @@ import LoginPage from './pages/Login';
 import RegisterPage from './pages/Register';
 import MovieListPage from './pages/MovieList';
 import MovieDetailsPage from './pages/MovieDetails';
-import { useAuth } from './context/AuthContext';
+import { AuthContext } from './context/AuthContext';
 import { Layout } from './components/Layout';
+import { useContext } from 'react';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  const { isLogged } = useContext(AuthContext);
+  return isLogged ? children : <Navigate to="/login" />;
 }
 
 export default function App() {

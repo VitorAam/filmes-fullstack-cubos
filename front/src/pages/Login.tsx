@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import { loginUser } from '../services/api';
 import {
   useToast,
@@ -15,6 +15,7 @@ import { PrimaryButton } from '../components/Buttons/PrimaryButton';
 import { CustomLink } from '../components/Buttons/CustomLink';
 import { CustomInput } from '../components/CustomInput';
 import { FormField } from '../components/Form/FormField';
+import { useContext } from 'react';
 
 const schema = z.object({
   email: z.string().email({ message: 'E-mail inválido' }),
@@ -30,7 +31,7 @@ export default function LoginPage() {
 
   const toast = useToast();
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login } = useContext(AuthContext);
 
   const onSubmit = async (data: LoginFormData) => {
     try {

@@ -1,33 +1,43 @@
-import { createContext, useContext, useState } from 'react';
+import React, { createContext, useMemo, useState } from "react";
 
-interface AuthContextProps {
-  isAuthenticated: boolean;
+interface AuthContextType {
+  token: string | null;
+  isLogged: boolean;
   login: (token: string) => void;
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
+const AuthContext = createContext<AuthContextType>({
+  token: null,
+  isLogged: false,
+  login: () => { },
+  logout: () => { },
+});
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() =>
-    !!localStorage.getItem('token')
-  );
+const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
+  const [token, setToken] = useState<string | null>(() => {
+    return localStorage.getItem("auth_token");
+  });
 
-  const login = (token: string) => {
-    localStorage.setItem('token', token);
-    setIsAuthenticated(true);
+  const login = (newToken: string) => {
+    localStorage.setItem("auth_token", newToken);
+    setToken(newToken);
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
+    localStorage.removeItem("auth_token");
+    setToken(null);
   };
 
+  const isLogged = !!token;
+
+  const contextValue = useMemo(() => ({ token, isLogged, login, logout }), [token, isLogged]);
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export { AuthContext, AuthContextProvider };

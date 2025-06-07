@@ -2,8 +2,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { loginUser } from '../services/api';
+import { registerUser } from '../services/api';
 import {
   useToast,
   Flex,
@@ -14,6 +13,8 @@ import { FormContainer } from '../components/Form/FormContainer';
 import { PrimaryButton } from '../components/Buttons/PrimaryButton';
 import { FormField } from '../components/Form/FormField';
 import { CustomInput } from '../components/CustomInput';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const schema = z.object({
   name: z.string().min(2, 'Este nome é inválido'),
@@ -31,12 +32,31 @@ export default function RegisterPage() {
 
   const toast = useToast();
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login } = useContext(AuthContext);
 
   const onSubmit = async (data: RegisterFormData) => {
+    if (data.password !== data.confirmPassword) {
+      toast({
+        title: 'Erro',
+        description: 'As senhas não coincidem.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     try {
-      const response = await loginUser(data.email, data.password);
+      const response = await registerUser(data.name, data.email, data.password);
       login(response.token);
+
+      toast({
+        title: 'Cadastro realizado!',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+
       navigate('/filmes');
     } catch (error) {
       let message = 'Tente novamente.';
@@ -46,7 +66,7 @@ export default function RegisterPage() {
       }
 
       toast({
-        title: 'Erro ao fazer login.',
+        title: 'Erro ao cadastrar.',
         description: message,
         status: 'error',
         duration: 3000,
@@ -69,8 +89,8 @@ export default function RegisterPage() {
         <CustomInput id="password" type="password" {...register('password')} placeholder='Digite sua senha' />
       </FormField>
 
-      <FormField label={'Senha'} error={!!errors.confirmPassword} errorMessage={errors.confirmPassword?.message ?? ''} >
-        <CustomInput id="password" type="password" {...register('password')} placeholder='Digite sua senha novamente' />
+      <FormField label={'Confirmação de senha'} error={!!errors.confirmPassword} errorMessage={errors.confirmPassword?.message ?? ''} >
+        <CustomInput id="confirmPassword" type="password" {...register('confirmPassword')} placeholder='Digite sua senha novamente' />
       </FormField>
 
       <Flex justifyContent={'flex-end'} alignItems={'center'} >
