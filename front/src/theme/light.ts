@@ -63,7 +63,9 @@ const lightTheme = extendTheme({
             10: 'rgba(5, 0, 25, 0.49)',
             11: 'rgba(4, 0, 17, 0.61))',
             12: 'rgba(2, 0, 8, 0.88)'
-        }
+        },
+        header: 'rgba(253, 252, 253, 0.5)',
+        backgroundLayer: 'rgba(253, 252, 253, 0.46)'
     },
     fonts: {
         heading: `'Poppins', sans-serif`,

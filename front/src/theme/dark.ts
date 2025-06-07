@@ -62,7 +62,9 @@ const darkTheme = extendTheme({
             10: 'rgba(236, 233, 253, 0.49)',
             11: 'rgba(245, 241, 255, 0.72)',
             12: 'rgba(253, 253, 255, 0.94)'
-        }
+        },
+        header: 'rgba(18, 17, 19, 0.5)',
+        backgroundLayer: 'rgba(18, 17, 19, 0.46)'
     },
     fonts: {
         heading: `'Poppins', sans-serif`,
