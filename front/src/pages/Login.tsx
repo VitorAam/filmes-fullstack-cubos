@@ -15,6 +15,8 @@ import {
 } from '@chakra-ui/react';
 import { Layout } from '../components/Layout';
 import { isAxiosError } from 'axios';
+import { useContext } from 'react';
+import { ThemeContext } from '../context/ThemeContext';
 
 const schema = z.object({
   email: z.string().email({ message: 'E-mail inválido' }),
@@ -54,6 +56,8 @@ export default function LoginPage() {
     }
   };
 
+  const { toggleTheme } = useContext(ThemeContext)
+
   return (
     <Layout>
       <Heading size="lg">Login</Heading>
@@ -69,13 +73,13 @@ export default function LoginPage() {
           <Input id="password" type="password" {...register('password')} />
           <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
         </FormControl>
-
         <Button
-          type="submit"
-          colorScheme="blue"
+          // type="submit"
+          bgColor={'purple.4'}
           width="full"
           mt={6}
           isLoading={isSubmitting}
+          onClick={() => toggleTheme()}
         >
           Entrar
         </Button>

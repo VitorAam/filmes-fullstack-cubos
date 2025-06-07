@@ -9,9 +9,9 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
     return (
-        <Flex flexDir={'column'} minH={'100vh'} justifyContent={'space-between'}  >
+        <Flex flexDir={'column'} minH={'100svh'}>
             <Header />
-            <Box>{children}</Box>
+            <Box bgColor={'mauve.1'} flex={'1'}>{children}</Box>
             <Footer />
         </Flex>
     )
