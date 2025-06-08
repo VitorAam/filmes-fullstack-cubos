@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes";
 import movieRoutes from "./routes/movie.routes";
+import uploadRouter from "./routes/upload";
 
 dotenv.config();
 
@@ -14,6 +15,8 @@ app.use(express.json());
 app.get("/", (_, res) => {
   res.send("API rodando com sucesso!");
 });
+
+app.use("/api", uploadRouter);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/movies", movieRoutes);

@@ -1,4 +1,4 @@
-import { Flex, InputGroup, InputRightElement, Text } from '@chakra-ui/react';
+import { Flex, InputGroup, InputRightElement, Text, useDisclosure } from '@chakra-ui/react';
 import { MovieCardContainer } from '../components/MovieCardContainer';
 import { CustomInput } from '../components/CustomInput';
 import { SecondaryButton } from '../components/Buttons/SecondaryButton';
@@ -6,31 +6,37 @@ import { PrimaryButton } from '../components/Buttons/PrimaryButton';
 import Search from '../components/Icons/Search';
 import { useContext } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
+import { AddMovieDrawer } from '../components/Drawers/AddMovieDrawer';
 
 export default function MovieListPage() {
     const { isDark } = useContext(ThemeContext)
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     return (
-        <Flex flexDir={'column'} w={'full'}>
-            <Flex flexDir={{base: 'column', md: 'row'}}  gap={'10px'} w={'full'} justifyContent={'end'} p={{ base: '16px', md: '24px' }} >
-                <Flex w={'full'} maxW={'488px'}>
-                    <InputGroup>
-                        <CustomInput placeholder={'Pesquise por filmes'} w={'full'}  />
-                        <InputRightElement _hover={{cursor: 'pointer'}}>
-                            <Search color={isDark ? '#B5B2BC' : '#121113'} />
-                        </InputRightElement>
-                    </InputGroup>
+        <>
+            <Flex flexDir={'column'} w={'full'}>
+                <Flex flexDir={{ base: 'column', md: 'row' }} gap={'10px'} w={'full'} justifyContent={'end'} p={{ base: '16px', md: '24px' }} >
+                    <Flex w={'full'} maxW={'488px'}>
+                        <InputGroup>
+                            <CustomInput placeholder={'Pesquise por filmes'} w={'full'} />
+                            <InputRightElement _hover={{ cursor: 'pointer' }}>
+                                <Search color={isDark ? '#B5B2BC' : '#121113'} />
+                            </InputRightElement>
+                        </InputGroup>
+                    </Flex>
+                    <Flex w={{ base: 'full', md: 'max-content' }} gap={{ base: '2px', md: '10px' }} >
+                        <SecondaryButton w={{ base: 'full', md: '85px' }} h={'44px'} >
+                            <Text>Filtros</Text>
+                        </SecondaryButton>
+                        <PrimaryButton onClick={() => onOpen()} w={{ base: 'full', md: '151px' }} h={'44px'}>
+                            <Text>Adicionar Filme</Text>
+                        </PrimaryButton>
+                    </Flex>
                 </Flex>
-                <Flex w={{base: 'full', md: 'max-content'}} gap={{base: '2px', md: '10px'}} >
-                    <SecondaryButton w={{base: 'full', md: '85px'}} h={'44px'} >
-                        <Text>Filtros</Text>
-                    </SecondaryButton>
-                    <PrimaryButton w={{base: 'full', md: '151px'}} h={'44px'}>
-                        <Text>Adicionar Filme</Text>
-                    </PrimaryButton>
-                </Flex>
+                <MovieCardContainer movieCards={[{ id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }]} />
             </Flex>
-            <MovieCardContainer movieCards={[{ id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }]} />
-        </Flex>
+
+            <AddMovieDrawer title="" isOpen={isOpen} onClose={onClose}>{<></>}</AddMovieDrawer >
+        </>
     );
 }

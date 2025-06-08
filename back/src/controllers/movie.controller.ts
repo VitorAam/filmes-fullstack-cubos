@@ -2,10 +2,10 @@ import { Request, Response } from "express";
 import { createMovie, getMoviesPaginated, getMovieById, updateMovie, deleteMovie } from "../services/movie.service";
 import { z } from "zod";
 
-// Schema de validação do Movie
 const movieSchema = z.object({
   title: z.string(),
   description: z.string(),
+  trailerUrl: z.string(),
   synopsis: z.string(),
   previewUrl: z.string(),
   language: z.string(),

@@ -21,6 +21,7 @@ model Movie {
   description String
   synopsis    String
   previewUrl  String
+  trailerUrl  String
   language    String
   budget      Int
   votes       Int

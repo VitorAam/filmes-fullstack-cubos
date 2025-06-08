@@ -15,6 +15,7 @@ export const PrimaryButton = ({ children, ...rest }: PrimaryButtonProps) => {
             _hover={{ backgroundColor: 'purple.9' }}
             _active={{ backgroundColor: 'purple.7' }}
             _disabled={{backgroundColor: 'mauve.9', color: 'mauveAlpha.10'}}
+            p={'12px 20px'}
             {...rest}
         >
             {children}

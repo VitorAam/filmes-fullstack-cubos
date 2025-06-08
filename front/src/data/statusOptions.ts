@@ -1,0 +1,1 @@
+export const statusOptions = ["Lançado", "Em produção", "Planejado", "Cancelado"];
