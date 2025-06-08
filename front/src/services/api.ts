@@ -65,3 +65,12 @@ export const getMoviesPaginated = async (params: {
   });
   return response.data;
 };
+
+export const getMovieById = async (id: string) => {
+  const response = await axios.get(`${API_URL}/movies/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return response.data;
+};

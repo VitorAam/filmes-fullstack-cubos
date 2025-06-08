@@ -2,9 +2,10 @@ import { Flex, Text } from "@chakra-ui/react";
 
 interface GradeGraphicProps {
   grade: number;
+  mobileSize?: boolean;
 }
 
-export const GradeGraphic = ({ grade }: GradeGraphicProps) => {
+export const GradeGraphic = ({ grade, mobileSize }: GradeGraphicProps) => {
   const size = 140;
   const strokeWidth = 10;
   const radius = (size - strokeWidth) / 2;
@@ -16,8 +17,10 @@ export const GradeGraphic = ({ grade }: GradeGraphicProps) => {
       justifyContent="center"
       alignItems="center"
       position="relative"
-      h={{ base: "98px", md: `${size}px` }}
-      w={{ base: "98px", md: `${size}px` }}
+      minH={{ base: "98px", md: mobileSize ? '98px' : `${size}px` }}
+      minW={{ base: "98px", md: mobileSize ? '98px' : `${size}px` }}
+      h={{ base: "98px", md: mobileSize ? '98px' : `${size}px` }}
+      w={{ base: "98px", md: mobileSize ? '98px' : `${size}px` }}
       bgColor={'rgba(0,0,0,0.5)'}
       borderRadius={'100%'}
       m={'auto'}
@@ -45,11 +48,11 @@ export const GradeGraphic = ({ grade }: GradeGraphicProps) => {
 
       <Text
         position="absolute"
-        color="white"
-        fontSize={{ base: "20px", md: "28px" }}
-        fontWeight="bold"
+        color={"rgba(255, 224, 0, 1)"}
+        fontWeight={600}
+        fontSize={{base: '20px', md: mobileSize ? '20px' : '24px'}}
       >
-        {grade}%
+        {grade}<Text as={'span'} color={'white'} >%</Text>
       </Text>
     </Flex>
   );
