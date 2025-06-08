@@ -39,8 +39,6 @@ export const UploadImage = ({ name, uploadUrl }: UploadImageProps) => {
     }
   };
 
-  console.log(previewUrl)
-
   return (
     <Box>
       <PrimaryButton

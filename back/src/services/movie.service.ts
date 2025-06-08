@@ -40,6 +40,13 @@ export async function getMoviesPaginated(
     where,
     skip,
     take: pageSize,
+    select: {
+      id: true,
+      title: true,
+      grade: true,
+      genres: true,
+      previewUrl: true
+    },
     orderBy: {
       launch: "desc",
     },

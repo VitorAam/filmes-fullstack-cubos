@@ -21,6 +21,7 @@ export const MovieCard = ({ imgUrl, title, genres, grade, id }: MovieCardProps) 
             justifyContent="flex-end"
             bgImage={`url(${imgUrl})`}
             backgroundSize="cover"
+            backgroundPosition='center'
             backgroundRepeat="no-repeat"
             w={{ base: "183px", md: "235px" }}
             h={{ base: "281px", md: "355px" }}
@@ -36,7 +37,7 @@ export const MovieCard = ({ imgUrl, title, genres, grade, id }: MovieCardProps) 
                     marginTop: "8px",
                 },
             }}
-            onClick={()=>router(`/filmes/${id}`)}
+            onClick={() => router(`/filmes/${id}`)}
         >
             <Box
                 position="absolute"

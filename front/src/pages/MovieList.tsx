@@ -4,13 +4,48 @@ import { CustomInput } from '../components/CustomInput';
 import { SecondaryButton } from '../components/Buttons/SecondaryButton';
 import { PrimaryButton } from '../components/Buttons/PrimaryButton';
 import Search from '../components/Icons/Search';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 import { AddMovieDrawer } from '../components/Drawers/AddMovieDrawer';
+import { getMoviesPaginated } from '../services/api';
+import type { MovieCardSummary } from '../types/movie';
 
 export default function MovieListPage() {
-    const { isDark } = useContext(ThemeContext)
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isDark } = useContext(ThemeContext);
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const [movies, setMovies] = useState([]);
+
+    useEffect(() => {
+        async function fetchMovies() {
+            try {
+                const data = await getMoviesPaginated({
+                    page: 1,
+                    pageSize: 10,
+                    // você pode passar filtros aqui se quiser, ex:
+                    // minDuration: 60,
+                    // maxDuration: 180,
+                    // startDate: '2024-01-01',
+                    // endDate: '2024-12-31',
+                });
+
+                setMovies(
+                    data.map((movie: MovieCardSummary) => ({
+                        id: movie.id,
+                        title: movie.title,
+                        grade: movie.grade,
+                        genres: movie.genres,
+                        imgUrl: movie.previewUrl,
+                    }))
+                );
+            } catch (error) {
+                console.error("Erro ao buscar filmes paginados:", error);
+            }
+        }
+
+        fetchMovies();
+    }, []);
+
 
     return (
         <>
@@ -33,7 +68,7 @@ export default function MovieListPage() {
                         </PrimaryButton>
                     </Flex>
                 </Flex>
-                <MovieCardContainer movieCards={[{ id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }, { id: '1', grade: 67, genres: ['Ação', 'Aventura', 'Ficção Científica'], title: 'Alita: anjo de combate', imgUrl: '/teste.png' }]} />
+                <MovieCardContainer movieCards={movies} />
             </Flex>
 
             <AddMovieDrawer title="" isOpen={isOpen} onClose={onClose}>{<></>}</AddMovieDrawer >

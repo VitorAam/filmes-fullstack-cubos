@@ -29,7 +29,7 @@ model Movie {
   revenue     Int
   status      String
   duration    Int
-  launch      DateTime
+  launch      String
   grade       Float
   genres      String[]
 }
