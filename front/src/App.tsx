@@ -12,13 +12,32 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
   return isLogged ? children : <Navigate to="/login" />;
 }
 
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { isLogged } = useContext(AuthContext);
+  return isLogged ? <Navigate to="/filmes" /> : children;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />} >
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/cadastro" element={<RegisterPage />} />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <LoginPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/cadastro"
+            element={
+              <PublicRoute>
+                <RegisterPage />
+              </PublicRoute>
+            }
+          />
           <Route
             path="/filmes"
             element={

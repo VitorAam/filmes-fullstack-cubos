@@ -9,7 +9,7 @@ export const Layout = () => {
     <Flex flexDir="column" minH="100svh">
       <Header />
       <Background />
-      <Flex flex="1">
+      <Flex flex="1"  >
         <Outlet />
       </Flex>
       <Footer />

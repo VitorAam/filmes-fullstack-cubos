@@ -13,9 +13,9 @@ export const CustomInput = ({ placeholder, ...rest }: CustomInputProps) => {
             borderRadius={'4px'}
             bgColor={'mauve.2'}
             color={'mauve.12'}
-            _placeholder={{color: 'mauve.9', fontWeight: 400}}
-            _hover={{borderColor: 'mauve.6'}}
-            _focus={{borderColor: 'purple.8', boxShadow: 'none'}}
+            _placeholder={{ color: 'mauve.9', fontWeight: 400 }}
+            _hover={{ borderColor: 'mauve.6' }}
+            _focus={{ borderColor: 'purple.8', boxShadow: 'none' }}
             placeholder={placeholder}
             {...rest}
         />
