@@ -1,6 +1,6 @@
 import { Flex, Text } from "@chakra-ui/react";
-import ChevronRight from "./icons/ChevronRight";
-import ChevronLeft from "./icons/ChevronLeft";
+import ChevronRight from "./CustomIcons/ChevronRight";
+import ChevronLeft from "./CustomIcons/ChevronLeft";
 import { PrimaryButton } from "./Buttons/PrimaryButton";
 
 interface PaginationProps {
