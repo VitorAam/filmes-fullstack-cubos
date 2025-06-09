@@ -93,6 +93,13 @@ export async function list(req: Request, res: Response) {
       };
     }
 
+    const totalCount = await prisma.movie.count({
+      where
+    });
+
+
+    const totalPages = Math.ceil(totalCount / pageSize);
+
     const movies = await prisma.movie.findMany({
       where,
       skip: (page - 1) * pageSize,
@@ -103,25 +110,13 @@ export async function list(req: Request, res: Response) {
       select: {
         id: true,
         title: true,
-        description: true,
-        synopsis: true,
         previewUrl: true,
-        language: true,
-        budget: true,
-        votes: true,
-        popularity: true,
-        revenue: true,
-        status: true,
-        duration: true,
-        launch: true,
         genres: true,
         grade: true,
-        trailerUrl: true,
-        userId: true,
       },
     });
 
-    res.json(movies);
+    res.json({movies, totalPages, totalCount, currentPage: page});
   } catch (err) {
     console.error("Erro ao listar filmes:", err);
     res.status(500).json({ error: "Erro interno no servidor." });

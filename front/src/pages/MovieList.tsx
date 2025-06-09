@@ -11,6 +11,7 @@ import { getMoviesPaginated } from '../services/api';
 import type { MovieCardSummary } from '../types/movie';
 import { FilterModal } from '../components/Modals/FilterModal';
 import type { FilterValues } from '../types/filter';
+import { Pagination } from '../components/Pagination';
 
 
 export default function MovieListPage() {
@@ -28,11 +29,14 @@ export default function MovieListPage() {
         genres: [],
     });
 
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
     useEffect(() => {
         async function fetchMovies() {
             try {
                 const data = await getMoviesPaginated({
-                    page: 1,
+                    page,
                     pageSize: 10,
                     search: searchTerm,
                     minDuration: filters.minDuration,
@@ -43,7 +47,7 @@ export default function MovieListPage() {
                 });
 
                 setMovies(
-                    data.map((movie: MovieCardSummary) => ({
+                    data.movies.map((movie: MovieCardSummary) => ({
                         id: movie.id,
                         title: movie.title,
                         grade: movie.grade,
@@ -51,13 +55,15 @@ export default function MovieListPage() {
                         imgUrl: movie.previewUrl,
                     }))
                 );
+
+                setTotalPages(data.totalPages);
             } catch (error) {
                 console.error("Erro ao buscar filmes paginados:", error);
             }
         }
 
         fetchMovies();
-    }, [searchTerm, filters]);
+    }, [page, searchTerm, filters]);
 
     return (
         <>
@@ -86,6 +92,11 @@ export default function MovieListPage() {
                     </Flex>
                 </Flex>
                 <MovieCardContainer movieCards={movies} />
+                {totalPages > 1 ? <Pagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    onPageChange={(newPage) => setPage(newPage)}
+                /> : null}
             </Flex>
 
             <AddMovieDrawer title="" isOpen={isAddOpen} onClose={onAddClose}>{<></>}</AddMovieDrawer>
