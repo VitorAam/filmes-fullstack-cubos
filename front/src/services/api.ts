@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { MovieFormData } from '../schemas/movieSchema';
 
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3333/api';
 const token = localStorage.getItem("token");
@@ -74,3 +75,26 @@ export const getMovieById = async (id: string) => {
   });
   return response.data;
 };
+
+export async function deleteMovie(id: string) {
+  const response = await axios.delete(`${API_URL}/movies/${id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+  });
+
+  if (response.status !== 204) {
+    throw new Error('Erro ao deletar filme');
+  }
+}
+
+export async function updateMovie(id: string, data: MovieFormData) {
+  const response = await axios.patch(`${API_URL}/movies/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}

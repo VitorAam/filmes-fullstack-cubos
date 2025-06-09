@@ -1,9 +1,10 @@
 import { Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, Flex } from "@chakra-ui/react"
-import { useContext, type ComponentProps } from "react"
+import { useContext, type ComponentProps, type ReactElement } from "react"
 import { ThemeContext } from "../../context/ThemeContext"
 
 type CustomDrawerProps = {
-    title: string
+    title?: string
+    children?: ReactElement
 } & ComponentProps<typeof Drawer>
 
 export const CustomDrawer = ({ title, isOpen, onClose, children }: CustomDrawerProps) => {

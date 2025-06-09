@@ -78,7 +78,7 @@ export async function update(req: Request, res: Response) {
   const { id } = req.params;
 
   try {
-    const data = movieSchema.partial().parse(req.body); // partial() permite edição parcial
+    const data = movieSchema.partial().parse(req.body);
     const movie = await updateMovie(id, data);
 
     if (!movie) return res.status(404).json({ error: "Filme não encontrado para atualizar." });

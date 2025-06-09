@@ -9,7 +9,7 @@ router.use(authMiddleware);
 router.post("/", create);
 router.get("/", list);
 router.get("/:id", get);
-router.put("/:id", update);
+router.patch("/:id", update);
 router.delete("/:id", remove);
 
 export default router;
