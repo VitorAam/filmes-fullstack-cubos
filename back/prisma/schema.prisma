@@ -13,6 +13,8 @@ model User {
   name      String
   password  String
   createdAt DateTime @default(now())
+
+  movies    Movie[]
 }
 
 model Movie {
@@ -32,4 +34,7 @@ model Movie {
   launch      String
   grade       Float
   genres      String[]
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
 }
