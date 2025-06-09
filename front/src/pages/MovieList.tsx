@@ -3,7 +3,7 @@ import { MovieCardContainer } from '../components/MovieCardContainer';
 import { CustomInput } from '../components/CustomInput';
 import { SecondaryButton } from '../components/Buttons/SecondaryButton';
 import { PrimaryButton } from '../components/Buttons/PrimaryButton';
-import Search from '../components/Icons/Search';
+import Search from '../components/icons/Search';
 import { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 import { AddMovieDrawer } from '../components/Drawers/AddMovieDrawer';
