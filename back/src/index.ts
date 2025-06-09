@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes";
 import movieRoutes from "./routes/movie.routes";
 import uploadRouter from "./routes/upload";
+import cron from "node-cron";
+import { sendLaunchNotifications } from "./jobs/sendLaunchNotification";
 
 dotenv.config();
 
@@ -24,4 +26,8 @@ app.use("/api/movies", movieRoutes);
 const PORT = process.env.PORT ?? 3333;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
+});
+
+cron.schedule("0 8 * * *", async () => {
+  await sendLaunchNotifications();
 });
