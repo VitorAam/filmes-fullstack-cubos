@@ -4,9 +4,10 @@ import { PrimaryButton } from "./Buttons/PrimaryButton";
 import { deleteMovie } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import { CustomModal } from "./Modal";
+import { CustomModal } from "./Modals";
 import type { MovieDetails } from "../types/movie";
 import { AuthContext } from "../context/AuthContext";
+import { ThemeContext } from "../context/ThemeContext";
 
 interface DetailsHeaderProps {
     data: MovieDetails
@@ -17,6 +18,7 @@ interface DetailsHeaderProps {
 export const DetailsHeader = ({ data, onEditClick, userId }: DetailsHeaderProps) => {
     const { userId: myUserId } = useContext(AuthContext);
     const canEdit = myUserId === userId;
+    const {isDark} = useContext(ThemeContext)
 
     const navigate = useNavigate();
     const toast = useToast();
@@ -58,7 +60,7 @@ export const DetailsHeader = ({ data, onEditClick, userId }: DetailsHeaderProps)
             gap={2}
         >
             <Box textAlign={{ base: "center", md: "left" }}>
-                <Text color="mauve.12" fontSize="32px" fontWeight={600}>
+                <Text  color={isDark ? 'mauve.12' : 'mauve.4'} fontSize="32px" fontWeight={600}>
                     {data.title}
                 </Text>
                 <Text

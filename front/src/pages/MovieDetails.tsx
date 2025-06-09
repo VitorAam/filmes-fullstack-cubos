@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import type { MovieDetails } from "../types/movie";
 import { getMovieById, updateMovie } from "../services/api";
@@ -8,11 +8,13 @@ import { MovieInfo } from "../components/MovieInfo";
 import { EditMovieDrawer } from "../components/Drawers/EditMovieDrawer";
 import type { MovieFormData } from "../schemas/movieSchema";
 import { movieDetailsToFormData } from "../utils/helpers";
+import { ThemeContext } from "../context/ThemeContext";
 
 export default function MovieDetailsPage() {
     const { id } = useParams<{ id: string }>();
     const [movie, setMovie] = useState<MovieDetails | null>(null);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const {isDark} = useContext(ThemeContext)
     const toast = useToast()
 
     useEffect(() => {
@@ -61,7 +63,7 @@ export default function MovieDetailsPage() {
 
     return (
         <>
-            <Flex maxW={'1305px'} mx={'auto'} gap={'16px'} p={{ base: '16px', md: '32px' }} w={'full'} flexDir={'column'} alignItems={'center'}  >
+            <Flex bgColor={isDark ? '' : 'purpleAlpha.8'}  maxW={'1305px'} mx={'auto'} gap={'16px'} p={{ base: '16px', md: '32px' }} w={'full'} flexDir={'column'} alignItems={'center'}  >
                 <Box display={{ base: 'inline', lg: 'none' }} backgroundImage={movie.previewUrl} mx={'center'} backgroundSize={'cover'} backgroundPosition={'center'} w={'382px'} h={'582px'} maxW={'full'} />
                 <DetailsHeader data={movie} onEditClick={onOpen} userId={movie.userId} />
 

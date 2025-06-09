@@ -9,14 +9,24 @@ import { ThemeContext } from '../context/ThemeContext';
 import { AddMovieDrawer } from '../components/Drawers/AddMovieDrawer';
 import { getMoviesPaginated } from '../services/api';
 import type { MovieCardSummary } from '../types/movie';
+import { FilterModal } from '../components/Modals/FilterModal';
+import type { FilterValues } from '../types/filter';
+
 
 export default function MovieListPage() {
     const { isDark } = useContext(ThemeContext);
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure();
+    const { isOpen: isFilterOpen, onOpen: onFilterOpen, onClose: onFilterClose } = useDisclosure();
 
     const [movies, setMovies] = useState([]);
-
     const [searchTerm, setSearchTerm] = useState("");
+    const [filters, setFilters] = useState<FilterValues>({
+        minDuration: undefined,
+        maxDuration: undefined,
+        startDate: '',
+        endDate: '',
+        genres: [],
+    });
 
     useEffect(() => {
         async function fetchMovies() {
@@ -25,6 +35,11 @@ export default function MovieListPage() {
                     page: 1,
                     pageSize: 10,
                     search: searchTerm,
+                    minDuration: filters.minDuration,
+                    maxDuration: filters.maxDuration,
+                    startDate: filters.startDate,
+                    endDate: filters.endDate,
+                    genres: filters.genres,
                 });
 
                 setMovies(
@@ -42,7 +57,8 @@ export default function MovieListPage() {
         }
 
         fetchMovies();
-    }, [searchTerm]);
+    }, [searchTerm, filters]);
+
     return (
         <>
             <Flex flexDir={'column'} w={'full'}>
@@ -53,17 +69,18 @@ export default function MovieListPage() {
                                 placeholder="Pesquise por filmes"
                                 w="full"
                                 value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)} />
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
                             <InputRightElement>
                                 <Search color={isDark ? '#B5B2BC' : '#121113'} />
                             </InputRightElement>
                         </InputGroup>
                     </Flex>
                     <Flex w={{ base: 'full', md: 'max-content' }} gap={{ base: '2px', md: '10px' }} >
-                        <SecondaryButton w={{ base: 'full', md: '85px' }} h={'44px'} >
+                        <SecondaryButton w={{ base: 'full', md: '85px' }} h={'44px'} onClick={onFilterOpen}>
                             <Text>Filtros</Text>
                         </SecondaryButton>
-                        <PrimaryButton onClick={() => onOpen()} w={{ base: 'full', md: '151px' }} h={'44px'}>
+                        <PrimaryButton onClick={onAddOpen} w={{ base: 'full', md: '151px' }} h={'44px'}>
                             <Text>Adicionar Filme</Text>
                         </PrimaryButton>
                     </Flex>
@@ -71,7 +88,13 @@ export default function MovieListPage() {
                 <MovieCardContainer movieCards={movies} />
             </Flex>
 
-            <AddMovieDrawer title="" isOpen={isOpen} onClose={onClose}>{<></>}</AddMovieDrawer >
+            <AddMovieDrawer title="" isOpen={isAddOpen} onClose={onAddClose}>{<></>}</AddMovieDrawer>
+
+            <FilterModal
+                isOpen={isFilterOpen}
+                onClose={onFilterClose}
+                onApplyFilters={(newFilters) => setFilters(newFilters)}
+            ><></></FilterModal>
         </>
     );
 }

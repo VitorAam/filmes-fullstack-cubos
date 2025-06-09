@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
-import { createMovie, getMoviesPaginated, getMovieById, updateMovie, deleteMovie } from "../services/movie.service";
+import { createMovie, getMovieById, updateMovie, deleteMovie } from "../services/movie.service";
 import { z } from "zod";
 import { AuthRequest } from "../middleware/auth.middleware";
+import { prisma } from "../utils/prisma";
+import { parseOptionalInt } from "../utils/parseInt";
+import { parseOptionalDate } from "../utils/parseDate";
 
 const movieSchema = z.object({
   title: z.string(),
@@ -40,21 +43,82 @@ export async function list(req: Request, res: Response) {
   const page = parseInt(req.query.page as string) || 1;
   const pageSize = parseInt(req.query.pageSize as string) || 10;
 
-  const minDuration = req.query.minDuration ? parseInt(req.query.minDuration as string) : undefined;
-  const maxDuration = req.query.maxDuration ? parseInt(req.query.maxDuration as string) : undefined;
-  const startDate = req.query.startDate as string;
-  const endDate = req.query.endDate as string;
+  const minDuration = parseOptionalInt(req.query.minDuration);
+  const maxDuration = parseOptionalInt(req.query.maxDuration);
+  const startDate = parseOptionalDate(req.query.startDate);
+  const endDate = parseOptionalDate(req.query.endDate);
 
-  // Aqui pegamos o search:
-  const search = req.query.search as string;
+  let genres: string[] | undefined;
+  if (req.query.genres) {
+    if (Array.isArray(req.query.genres)) {
+      genres = req.query.genres as string[];
+    } else {
+      genres = [(req.query.genres as string)];
+    }
+  }
+
+  const search = req.query.search as string | undefined;
 
   try {
-    const movies = await getMoviesPaginated(page, pageSize, {
-      search, // 👈 passamos para o service
-      minDuration,
-      maxDuration,
-      startDate,
-      endDate,
+    const where: any = {};
+
+    if (search) {
+      where.title = {
+        contains: search,
+        mode: 'insensitive',
+      };
+    }
+
+    if (minDuration !== undefined || maxDuration !== undefined) {
+      where.duration = {};
+      if (minDuration !== undefined) {
+        where.duration.gte = minDuration;
+      }
+      if (maxDuration !== undefined) {
+        where.duration.lte = maxDuration;
+      }
+    }
+
+    where.launch = {};
+    if (startDate !== undefined) {
+      where.launch.gte = startDate.toISOString();
+    }
+    if (endDate !== undefined) {
+      where.launch.lte = endDate.toISOString();
+    }
+
+    if (genres && genres.length > 0) {
+      where.genres = {
+        hasSome: genres,
+      };
+    }
+
+    const movies = await prisma.movie.findMany({
+      where,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      orderBy: {
+        launch: 'desc',
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        synopsis: true,
+        previewUrl: true,
+        language: true,
+        budget: true,
+        votes: true,
+        popularity: true,
+        revenue: true,
+        status: true,
+        duration: true,
+        launch: true,
+        genres: true,
+        grade: true,
+        trailerUrl: true,
+        userId: true,
+      },
     });
 
     res.json(movies);

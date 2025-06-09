@@ -60,11 +60,13 @@ export const getMoviesPaginated = async (params: {
   maxDuration?: number;
   startDate?: string;
   endDate?: string;
+  genres?: string[];
 }) => {
   const response = await axios.get(`${API_URL}/movies`, {
-    params, headers: {
-      Authorization: `Bearer ${token}`
-    }
+    params,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
   return response.data;
 };
