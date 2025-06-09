@@ -3,16 +3,21 @@ import { SecondaryButton } from "./Buttons/SecondaryButton";
 import { PrimaryButton } from "./Buttons/PrimaryButton";
 import { deleteMovie } from "../services/api";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CustomModal } from "./Modal";
 import type { MovieDetails } from "../types/movie";
+import { AuthContext } from "../context/AuthContext";
 
 interface DetailsHeaderProps {
     data: MovieDetails
     onEditClick: () => void
+    userId: string
 }
 
-export const DetailsHeader = ({ data, onEditClick }: DetailsHeaderProps) => {
+export const DetailsHeader = ({ data, onEditClick, userId }: DetailsHeaderProps) => {
+    const { userId: myUserId } = useContext(AuthContext);
+    const canEdit = myUserId === userId;
+
     const navigate = useNavigate();
     const toast = useToast();
     const [isDeleting, setIsDeleting] = useState(false);
@@ -64,7 +69,7 @@ export const DetailsHeader = ({ data, onEditClick }: DetailsHeaderProps) => {
                 </Text>
             </Box>
 
-            <Flex
+            {canEdit ? <Flex
                 gap={{ base: 2, md: 4 }}
                 w={{ base: "full", md: "max-content" }}
                 justifyContent="center"
@@ -85,7 +90,7 @@ export const DetailsHeader = ({ data, onEditClick }: DetailsHeaderProps) => {
                 >
                     <Text>Editar</Text>
                 </PrimaryButton>
-            </Flex>
+            </Flex> : null}
 
 
             <CustomModal title={'Deletar filme?'} isOpen={isOpen} onClose={onClose}  >

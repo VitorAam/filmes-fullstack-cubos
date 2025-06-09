@@ -8,6 +8,7 @@ import { currencyInput, numericInput, numericLimitInput } from "../../../utils/i
 import { genresOptions } from "../../../data/genresOptions";
 import { statusOptions } from "../../../data/statusOptions";
 import type { MovieFormData } from "../../../schemas/movieSchema";
+import { API_URL } from "../../../services/api";
 
 export const AddMovieFormFields = () => {
     const { control, register, formState: { errors } } = useFormContext<MovieFormData>();
@@ -48,7 +49,7 @@ export const AddMovieFormFields = () => {
             >
                 <UploadImage
                     name={"previewUrl"}
-                    uploadUrl={"http://localhost:3333/api/upload"}
+                    uploadUrl={`${API_URL}/upload`}
                 />
             </FormField>
 

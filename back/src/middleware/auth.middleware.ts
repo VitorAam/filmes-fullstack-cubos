@@ -1,22 +1,25 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-const SECRET = process.env.JWT_SECRET ?? "supersecret";
+export interface AuthRequest extends Request {
+    id?: string;
+}
 
-export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+export function authMiddleware(req: AuthRequest, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader?.startsWith("Bearer ")) {
+    if (!authHeader) {
         return res.status(401).json({ error: "Token não fornecido." });
     }
 
-    const token = authHeader.split(" ")[1];
+    const [, token] = authHeader.split(" ");
 
     try {
-        const decoded = jwt.verify(token, SECRET);
-        (req as any).user = decoded;
-        next();
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+        req.id = (decoded as any).id;
+        return next();
     } catch (err) {
-        return res.status(401).json({ error: "Token inválido.", message: err });
+        console.error(err)
+        return res.status(401).json({ error: "Token inválido." });
     }
 }

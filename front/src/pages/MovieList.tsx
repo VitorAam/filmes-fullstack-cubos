@@ -16,17 +16,15 @@ export default function MovieListPage() {
 
     const [movies, setMovies] = useState([]);
 
+    const [searchTerm, setSearchTerm] = useState("");
+
     useEffect(() => {
         async function fetchMovies() {
             try {
                 const data = await getMoviesPaginated({
                     page: 1,
                     pageSize: 10,
-                    // você pode passar filtros aqui se quiser, ex:
-                    // minDuration: 60,
-                    // maxDuration: 180,
-                    // startDate: '2024-01-01',
-                    // endDate: '2024-12-31',
+                    search: searchTerm,
                 });
 
                 setMovies(
@@ -44,17 +42,19 @@ export default function MovieListPage() {
         }
 
         fetchMovies();
-    }, []);
-
-
+    }, [searchTerm]);
     return (
         <>
             <Flex flexDir={'column'} w={'full'}>
                 <Flex flexDir={{ base: 'column', md: 'row' }} gap={'10px'} w={'full'} justifyContent={'end'} p={{ base: '16px', md: '24px' }} >
                     <Flex w={'full'} maxW={'488px'}>
                         <InputGroup>
-                            <CustomInput placeholder={'Pesquise por filmes'} w={'full'} />
-                            <InputRightElement _hover={{ cursor: 'pointer' }}>
+                            <CustomInput
+                                placeholder="Pesquise por filmes"
+                                w="full"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)} />
+                            <InputRightElement>
                                 <Search color={isDark ? '#B5B2BC' : '#121113'} />
                             </InputRightElement>
                         </InputGroup>

@@ -63,7 +63,7 @@ export default function MovieDetailsPage() {
         <>
             <Flex maxW={'1305px'} mx={'auto'} gap={'16px'} p={{ base: '16px', md: '32px' }} w={'full'} flexDir={'column'} alignItems={'center'}  >
                 <Box display={{ base: 'inline', lg: 'none' }} backgroundImage={movie.previewUrl} mx={'center'} backgroundSize={'cover'} backgroundPosition={'center'} w={'382px'} h={'582px'} maxW={'full'} />
-                <DetailsHeader data={movie} onEditClick={onOpen} />
+                <DetailsHeader data={movie} onEditClick={onOpen} userId={movie.userId} />
 
                 <Flex gap={4} w={'full'} >
                     <Box display={{ base: 'none', lg: 'inline' }} backgroundImage={movie.previewUrl} mx={'center'} backgroundSize={'cover'} backgroundPosition={'center'} minW={'374px'} maxW={'374px'} minH={'542px'} maxH={'542px'} />

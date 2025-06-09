@@ -1,8 +1,8 @@
 import axios from 'axios';
 import type { MovieFormData } from '../schemas/movieSchema';
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3333/api';
-const token = localStorage.getItem("token");
+export const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3333/api';
+const token = localStorage.getItem("auth_token");
 
 export async function registerUser(name: string, email: string, password: string) {
   const response = await axios.post(`${API_URL}/auth/register`, {
@@ -39,6 +39,7 @@ export async function registerMovie(data: {
   genres: Array<string>,
   trailerUrl: string,
   grade: number
+  user: string
 }) {
   const response = await axios.post(`${API_URL}/movies`, {
     ...data
@@ -54,6 +55,7 @@ export async function registerMovie(data: {
 export const getMoviesPaginated = async (params: {
   page?: number;
   pageSize?: number;
+  search?: string;
   minDuration?: number;
   maxDuration?: number;
   startDate?: string;

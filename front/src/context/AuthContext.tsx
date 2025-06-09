@@ -1,43 +1,71 @@
-import React, { createContext, useMemo, useState } from "react";
+import { createContext, useMemo, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 
 interface AuthContextType {
-  token: string | null;
-  isLogged: boolean;
-  login: (token: string) => void;
-  logout: () => void;
+    token: string | null;
+    userId: string | null;
+    isLogged: boolean;
+    login: (token: string) => void;
+    logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
-  token: null,
-  isLogged: false,
-  login: () => { },
-  logout: () => { },
+    token: null,
+    userId: null,
+    isLogged: false,
+    login: () => { },
+    logout: () => { },
 });
 
 const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [token, setToken] = useState<string | null>(() => {
-    return localStorage.getItem("auth_token");
-  });
+    const [token, setToken] = useState<string | null>(() => {
+        return localStorage.getItem("auth_token");
+    });
 
-  const login = (newToken: string) => {
-    localStorage.setItem("auth_token", newToken);
-    setToken(newToken);
-  };
+    const [userId, setUserId] = useState<string | null>(() => {
+        const savedToken = localStorage.getItem("auth_token");
+        if (savedToken) {
+            try {
+                const decoded = jwtDecode<{ id: string }>(savedToken);
+                return decoded.id;
+            } catch {
+                return null;
+            }
+        }
+        return null;
+    });
 
-  const logout = () => {
-    localStorage.removeItem("auth_token");
-    setToken(null);
-  };
+    const login = (newToken: string) => {
+        localStorage.setItem("auth_token", newToken);
+        setToken(newToken);
 
-  const isLogged = !!token;
+        try {
+            const decoded = jwtDecode<{ id: string }>(newToken);
+            console.log(decoded.id)
+            setUserId(decoded.id);
+        } catch {
+            setUserId(null);
+        }
+    };
 
-  const contextValue = useMemo(() => ({ token, isLogged, login, logout }), [token, isLogged]);
+    const logout = () => {
+        localStorage.removeItem("auth_token");
+        setToken(null);
+        setUserId(null);
+    };
 
-  return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
-  );
+    const isLogged = !!token;
+
+    const contextValue = useMemo(
+        () => ({ token, userId, isLogged, login, logout }),
+        [token, userId, isLogged]
+    );
+
+    return (
+        <AuthContext.Provider value={contextValue}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
 export { AuthContext, AuthContextProvider };

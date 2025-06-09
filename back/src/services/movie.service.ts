@@ -1,56 +1,67 @@
 import { prisma } from "../utils/prisma";
 
 export async function createMovie(data: any) {
-  return prisma.movie.create({ data });
+  return prisma.movie.create({
+    data,
+  });
 }
 
 export async function getMoviesPaginated(
   page: number,
   pageSize: number,
   filters: {
+    search?: string;
     minDuration?: number;
     maxDuration?: number;
     startDate?: string;
     endDate?: string;
   }
 ) {
+  const skip = (page - 1) * pageSize;
+
   const where: any = {};
+
+  if (filters.search) {
+    where.title = {
+      contains: filters.search,
+      mode: "insensitive",
+    };
+  }
 
   if (filters.minDuration !== undefined) {
     where.duration = { gte: filters.minDuration };
   }
 
   if (filters.maxDuration !== undefined) {
-    where.duration = {
-      ...(where.duration ?? {}),
-      lte: filters.maxDuration,
-    };
+    where.duration = { ...where.duration, lte: filters.maxDuration };
   }
 
-  if (filters.startDate && filters.endDate) {
+  if (filters.startDate) {
+    where.launch = { gte: new Date(filters.startDate) };
+  }
+
+  if (filters.endDate) {
     where.launch = {
-      gte: new Date(filters.startDate),
+      ...where.launch,
       lte: new Date(filters.endDate),
     };
   }
 
-  const skip = (page - 1) * pageSize;
-
-  return prisma.movie.findMany({
-    where,
+  const movies = await prisma.movie.findMany({
     skip,
     take: pageSize,
+    where,
+    orderBy: { launch: "desc" },
     select: {
       id: true,
       title: true,
       grade: true,
       genres: true,
-      previewUrl: true
-    },
-    orderBy: {
-      launch: "desc",
+      previewUrl: true,
     },
   });
+
+  return movies;
 }
 
 export async function getMovieById(id: string) {

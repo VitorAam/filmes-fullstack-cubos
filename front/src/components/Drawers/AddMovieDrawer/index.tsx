@@ -1,4 +1,4 @@
-import type { ComponentProps } from "react";
+import { useContext, type ComponentProps } from "react";
 import { CustomDrawer } from "../Drawer";
 import { DrawerBody, DrawerFooter, Flex, useToast } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -9,8 +9,10 @@ import { FormContainer } from "../../Form/FormContainer";
 import { AddMovieFormFields } from "./AddMovieFormFields";
 import { AddMovieFormFooter } from "./AddMovieFormFooter";
 import { registerMovie } from "../../../services/api";
+import { AuthContext } from "../../../context/AuthContext";
 
 export const AddMovieDrawer = (props: ComponentProps<typeof CustomDrawer>) => {
+    const { userId } = useContext(AuthContext)
     const formMethods = useForm<MovieFormData>({
         resolver: zodResolver(movieSchema),
         defaultValues: {
@@ -26,7 +28,7 @@ export const AddMovieDrawer = (props: ComponentProps<typeof CustomDrawer>) => {
 
     const onSubmit = async (data: MovieFormData) => {
         try {
-            const { error } = await registerMovie(data);
+            const { error } = await registerMovie({ ...data, user: userId ?? '' });
 
             if (error) {
                 throw new Error('Erro ao registrar o filme')

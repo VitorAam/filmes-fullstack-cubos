@@ -67,7 +67,7 @@ export const MovieCard = ({ imgUrl, title, genres, grade, id }: MovieCardProps) 
                     <GradeGraphic grade={grade} />
                 </Box>
 
-                <Box>
+                <Box w={'full'} textAlign={'left'} >
                     <Text
                         fontSize={"16px"}
                         fontWeight={600}

@@ -23,4 +23,5 @@ export interface MovieDetails {
     launch: string;
     grade: number;
     genres: string[];
+    userId: string
 }

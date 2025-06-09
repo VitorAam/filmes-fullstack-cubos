@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { createMovie, getMoviesPaginated, getMovieById, updateMovie, deleteMovie } from "../services/movie.service";
 import { z } from "zod";
+import { AuthRequest } from "../middleware/auth.middleware";
 
 const movieSchema = z.object({
   title: z.string(),
@@ -20,10 +21,10 @@ const movieSchema = z.object({
   genres: z.array(z.string()),
 });
 
-export async function create(req: Request, res: Response) {
+export async function create(req: AuthRequest, res: Response) {
   try {
     const data = movieSchema.parse(req.body);
-    const movie = await createMovie(data);
+    const movie = await createMovie({ ...data, userId: req.id! });
     res.status(201).json(movie);
   } catch (err) {
     if (err instanceof z.ZodError) {
@@ -44,8 +45,12 @@ export async function list(req: Request, res: Response) {
   const startDate = req.query.startDate as string;
   const endDate = req.query.endDate as string;
 
+  // Aqui pegamos o search:
+  const search = req.query.search as string;
+
   try {
     const movies = await getMoviesPaginated(page, pageSize, {
+      search, // 👈 passamos para o service
       minDuration,
       maxDuration,
       startDate,
@@ -74,16 +79,22 @@ export async function get(req: Request, res: Response) {
   }
 }
 
-export async function update(req: Request, res: Response) {
+export async function update(req: AuthRequest, res: Response) {
   const { id } = req.params;
 
   try {
     const data = movieSchema.partial().parse(req.body);
-    const movie = await updateMovie(id, data);
 
-    if (!movie) return res.status(404).json({ error: "Filme não encontrado para atualizar." });
+    const movie = await getMovieById(id);
 
-    res.json(movie);
+    if (!movie) return res.status(404).json({ error: "Filme não encontrado." });
+
+    if (movie.userId !== req.id) {
+      return res.status(403).json({ error: "Você não tem permissão para editar este filme." });
+    }
+
+    const updatedMovie = await updateMovie(id, data);
+    res.json(updatedMovie);
   } catch (err) {
     if (err instanceof z.ZodError) {
       return res.status(400).json({ error: err.errors });
@@ -94,10 +105,18 @@ export async function update(req: Request, res: Response) {
   }
 }
 
-export async function remove(req: Request, res: Response) {
+export async function remove(req: AuthRequest, res: Response) {
   const { id } = req.params;
 
   try {
+    const movie = await getMovieById(id);
+
+    if (!movie) return res.status(404).json({ error: "Filme não encontrado." });
+
+    if (movie.userId !== req.id) {
+      return res.status(403).json({ error: "Você não tem permissão para deletar este filme." });
+    }
+
     await deleteMovie(id);
     res.status(204).send();
   } catch (err) {
